@@ -1,0 +1,37 @@
+main, body {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    background-color: var(--main-bg-color);
+
+}
+
+.main {
+    width: 960px;
+    background-color: var(--popup-color);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgb(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+}
+
+button {
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    padding: 10px;
+}
+
+button:active {
+    scale: 0.97;
+}
+
+#connect-button {
+    font-size: 1.5rem;
+    background-color: var(--green-button);
+}
+
+#connect-button:hover {
+    background-color: var(--green-button-hover);
+}
