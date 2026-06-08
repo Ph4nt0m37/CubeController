@@ -13,5 +13,10 @@ public class Main {
 
         WindowHandler windowHandler = new WindowHandler();
         windowHandler.openControllerWindow();
+
+        ActionHandler actionHandler = ActionHandler.getInstance();
+        actionHandler.start();
+        actionHandler.addAction(new KeyClick("WINDOWS", 10));
+        actionHandler.stopHandler();
     }
 }

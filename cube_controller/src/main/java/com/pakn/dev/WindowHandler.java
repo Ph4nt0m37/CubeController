@@ -10,9 +10,10 @@ public class WindowHandler extends Thread {
 	private WebDriver driver = new ChromeDriver();
 
 	public void openControllerWindow() {
-		run();
+		this.start();
 	}
 
+    @Override
 	public void run() {
         try {
             Thread.sleep(1000);   
