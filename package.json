@@ -1,10 +1,12 @@
 {
   "dependencies": {
-    "esbuild": "^0.28.0",
     "smartcube-web-bluetooth": "github:poliva/smartcube-web-bluetooth"
   },
   "type": "module",
   "scripts": {
     "build": "npx esbuild cube_controller/src/main/resources/static/scripts/index.ts --bundle --outfile=cube_controller/src/main/resources/static/scripts/index.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.0"
   }
 }
