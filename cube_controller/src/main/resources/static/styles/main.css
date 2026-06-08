@@ -12,8 +12,9 @@ main, body {
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgb(0,0,0,0.1);
     display: flex;
-    justify-content: center;
+    align-items: center;
     padding: 15px;
+    flex-direction: column;
 }
 
 button {
@@ -34,4 +35,50 @@ button:active {
 
 #connect-button:hover {
     background-color: var(--green-button-hover);
+}
+
+.keybinds-list-div {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 10px;
+    gap: 20px;
+}
+
+.keybind-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.key-div > p {
+    font-size: 1.5rem;
+    margin: 5px;
+}
+
+.key-div {
+    display: flex;
+}
+
+.key {
+    display: flex;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    border: 1px solid var(--highest-defecit-color);
+    border-radius: 5px;
+    background-color: var(--high-defecit-color);
+}
+
+.time-input {
+    max-width: 70px;
+    border: 1px solid var(--highest-defecit-color);
+    border-radius: 5px;
+}
+
+.selected-box {
+    background-color: var(--highest-defecit-color);
+}
+
+#last-move {
+    font-size: 6rem;
+    margin: 20px;
 }

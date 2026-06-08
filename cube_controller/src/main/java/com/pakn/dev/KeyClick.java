@@ -83,14 +83,15 @@ public class KeyClick extends Action{
         case ".": return KeyEvent.VK_PERIOD; 
         case "/": return KeyEvent.VK_SLASH; 
         case " ": return KeyEvent.VK_SPACE; 
-        case "ESC": return KeyEvent.VK_ESCAPE;
-        case "TAB": return KeyEvent.VK_TAB;
-        case "ENTER": return KeyEvent.VK_ENTER;
-        case "UP": return KeyEvent.VK_UP;
-        case "DOWN": return KeyEvent.VK_DOWN;
-        case "LEFT": return KeyEvent.VK_LEFT;
-        case "RIGHT": return KeyEvent.VK_RIGHT;
-        case "WINDOWS": return KeyEvent.VK_WINDOWS;
+        case "esc": return KeyEvent.VK_ESCAPE;
+        case "tab": return KeyEvent.VK_TAB;
+        case "enter": return KeyEvent.VK_ENTER;
+        case "arrowup": return KeyEvent.VK_UP;
+        case "arrowdown": return KeyEvent.VK_DOWN;
+        case "arrowleft": return KeyEvent.VK_LEFT;
+        case "arrowright": return KeyEvent.VK_RIGHT;
+        case "meta": return KeyEvent.VK_META;
+        case "windows": return KeyEvent.VK_WINDOWS;
         default:
             return -1;
         }

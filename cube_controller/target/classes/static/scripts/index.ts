@@ -1,38 +1,64 @@
-import {
-    connectSmartCube,
-} from 'smartcube-web-bluetooth';
+const keyBoxes = document.getElementsByClassName("key");
+const timeInputs = document.getElementsByClassName("time-input");
 
-import type {
-    SmartCubeConnection,
-    SmartCubeEvent
-} from 'smartcube-web-bluetooth';
+let clickedBox: Element | null = null;
 
-//page stuff
-const connectButton = document.getElementById("connect-button");
-
-// Connect to any supported smart cube
-connectButton?.addEventListener("click", async ()=>{
-    console.log("clicked");
-    const conn: SmartCubeConnection = await connectSmartCube();
-    console.log("connected");
-
-    conn.events$.subscribe((event: SmartCubeEvent) => {
-        if (event.type === "FACELETS") {
-            console.log("Cube facelets state", event.facelets);
-        } else if (event.type === "MOVE") {
-            console.log("Cube move", event.move, "face", event.face, "direction", event.direction);
-        } else if (event.type === "GYRO") {
-            console.log("Cube orientation quaternion", event.quaternion);
-        } else if (event.type === "BATTERY") {
-            console.log("Battery level", event.batteryLevel);
-        }
+for (const keyBox of keyBoxes) {
+    keyBox.addEventListener("click", ()=>{
+        setTimeout(()=>{
+            clickedBox = keyBox;
+            clickedBox.removeAttribute("key");
+            clickedBox.removeAttribute("mouse");
+            clickedBox.classList.add("selected-box");
+        }, 10); //wait 10 ms to let the document click event process
     });
+}
 
-    // Request current facelets / battery if supported
-    if (conn.capabilities.facelets) {
-        await conn.sendCommand({ type: "REQUEST_FACELETS" });
+for (const timeInput of timeInputs) {
+    timeInput.addEventListener("input", ()=>{
+        timeInput.parentElement?.querySelector(".key")?.setAttribute("time",`${(timeInput as HTMLInputElement).value}`);
+    });
+}
+
+document.addEventListener("keydown", (event)=> {
+    if (clickedBox) {
+        if (event.key==" ") {
+            clickedBox.textContent = "Space";
+            clickedBox.setAttribute("key", "SPACE");
+        }else {
+            clickedBox.textContent = event.key;
+            clickedBox.setAttribute("key", event.key.toLowerCase());
+        }
+        
+        clickedBox.classList.remove("selected-box");
+        clickedBox = null;
     }
-    if (conn.capabilities.battery) {
-        await conn.sendCommand({ type: "REQUEST_BATTERY" });
+});
+
+document.addEventListener("click", (event)=> {
+    if (clickedBox) {
+        if (event.button===0) {
+            clickedBox.textContent = "Left Click";
+            clickedBox.setAttribute("mouse","LEFT_MOUSE_DOWN");
+        }else if (event.button===1) {
+            clickedBox.textContent = "Middle Click";
+            clickedBox.setAttribute("mouse","MIDDLE_MOUSE_DOWN");
+        }else if (event.button===2) {
+            clickedBox.textContent = "Right Click";
+            clickedBox.setAttribute("mouse","RIGHT_MOUSE_DOWN");
+        }
+        
+        clickedBox.classList.remove("selected-box");
+        clickedBox = null;
+    }
+});
+
+document.addEventListener("contextmenu", (event)=> { //detect right click
+    if (clickedBox) {
+        clickedBox.textContent = "Right Click";
+        clickedBox.setAttribute("mouse","RIGHT_MOUSE_DOWN");
+        
+        clickedBox.classList.remove("selected-box");
+        clickedBox = null;
     }
 });

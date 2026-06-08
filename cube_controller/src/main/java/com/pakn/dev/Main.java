@@ -16,7 +16,5 @@ public class Main {
 
         ActionHandler actionHandler = ActionHandler.getInstance();
         actionHandler.start();
-        actionHandler.addAction(new KeyClick("WINDOWS", 10));
-        actionHandler.stopHandler();
     }
 }

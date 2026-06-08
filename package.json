@@ -4,7 +4,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "npx esbuild cube_controller/src/main/resources/static/scripts/index.ts --bundle --outfile=cube_controller/src/main/resources/static/scripts/index.js"
+    "build": "tsc && npx esbuild cube_controller/src/main/resources/static/scripts/bluetooth.ts --bundle --outfile=cube_controller/src/main/resources/static/scripts/bluetooth.js"
   },
   "devDependencies": {
     "esbuild": "0.28.0"
