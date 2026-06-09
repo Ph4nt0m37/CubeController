@@ -33,4 +33,11 @@ public class MouseClick extends Action{
     public boolean equals(Object other) {
         return this==other || mouseEvent==((MouseClick)other).mouseEvent;
     }
+
+    @Override
+    public String toString() {
+        return "MouseClick [mouseEvent=" + mouseEvent + ", getEndTime()=" + getEndTime() + "]";
+    }
+
+    
 }

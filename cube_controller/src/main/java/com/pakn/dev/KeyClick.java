@@ -96,6 +96,7 @@ public class KeyClick extends Action{
         case "control": return KeyEvent.VK_CONTROL;
         case "shft": return KeyEvent.VK_SHIFT;
         case "shift": return KeyEvent.VK_SHIFT;
+        case "space": return KeyEvent.VK_SPACE;
         default:
             return -1;
         }
@@ -105,4 +106,11 @@ public class KeyClick extends Action{
     public boolean equals(Object other) {
         return this==other || key==((KeyClick)other).key;
     }
+
+    @Override
+    public String toString() {
+        return "KeyClick [key=" + key + ", getEndTime()=" + getEndTime() + "]";
+    }
+
+    
 }

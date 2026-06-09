@@ -59,12 +59,13 @@ public class WindowHandler extends Thread {
                         }else if (mouse!=null) {
                             actionHandler.addAction(new KeyClick(mouse, Long.valueOf(moveElement.getAttribute("time"))));
                         }
+                        break;
                     }
                 }
 			}catch (UnreachableBrowserException | NoSuchWindowException e) {
 				actionHandler.stopHandler();
 				System.exit(0);
-			}catch (org.openqa.selenium.NoSuchElementException e) {
+			}catch (org.openqa.selenium.NoSuchElementException | NumberFormatException e) {
 				continue;
 			}
 		}

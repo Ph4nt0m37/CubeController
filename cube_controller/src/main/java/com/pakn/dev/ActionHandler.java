@@ -8,7 +8,7 @@ import java.util.HashSet;
 //implemented as a singleton since we only ever want one ActionHandler handling key/mouse clicks
 public final class ActionHandler extends Thread {
     private static ActionHandler instance = null;
-    private static HashSet<Action> actionList = new HashSet<>();
+    private static ArrayList<Action> actionList = new ArrayList<>();
     private static boolean isRunning = false;
     private static Robot robot;
 
@@ -34,16 +34,28 @@ public final class ActionHandler extends Thread {
     @Override
     public void run() {
         isRunning = true;
-        while (isRunning) {
-            for (Action action:actionList) {
-                if (action.getEndTime() >= System.currentTimeMillis()) {
-                    if (action instanceof KeyClick keyAction) {
-                        robot.keyRelease(keyAction.getKey());
-                    }else if (action instanceof MouseClick mouseAction) {
-                        robot.mouseRelease(mouseAction.getMouseEvent());
+        try {
+            while (isRunning) {
+                //System.out.println(actionList.size());
+                for (int i=0;i<actionList.size();i++) {
+                    Action action = actionList.get(i);
+                    System.out.println(action.getEndTime());
+                    if (System.currentTimeMillis() >= action.getEndTime()) {
+                        if (action instanceof KeyClick keyAction) {
+                            robot.keyRelease(keyAction.getKey());
+                            actionList.remove(action);
+                            i--;
+                        }else if (action instanceof MouseClick mouseAction) {
+                            robot.mouseRelease(mouseAction.getMouseEvent());
+                            actionList.remove(action);
+                            i--;
+                        }
                     }
                 }
+                Thread.sleep(1);
             }
+        }catch (InterruptedException e) {
+            System.exit(0);
         }
     }
 
