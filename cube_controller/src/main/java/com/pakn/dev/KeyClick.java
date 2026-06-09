@@ -92,6 +92,10 @@ public class KeyClick extends Action{
         case "arrowright": return KeyEvent.VK_RIGHT;
         case "meta": return KeyEvent.VK_META;
         case "windows": return KeyEvent.VK_WINDOWS;
+        case "ctrl": return KeyEvent.VK_CONTROL;
+        case "control": return KeyEvent.VK_CONTROL;
+        case "shft": return KeyEvent.VK_SHIFT;
+        case "shift": return KeyEvent.VK_SHIFT;
         default:
             return -1;
         }
