@@ -7,6 +7,7 @@ import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -14,10 +15,16 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 
 public class WindowHandler extends Thread {
 
-	private WebDriver driver = new ChromeDriver();
+	private WebDriver driver;
 	private ActionHandler actionHandler = ActionHandler.getInstance();
 
 	public void openControllerWindow() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--enable-experimental-web-platform-features");
+        options.addArguments("--enable-web-bluetooth-new-permissions-backend");
+
+        driver = new ChromeDriver(options);
+
 		this.start();
 	}
 

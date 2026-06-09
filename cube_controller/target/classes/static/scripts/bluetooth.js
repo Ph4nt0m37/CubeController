@@ -6740,8 +6740,10 @@
         console.log("Cube facelets state", event.facelets);
       } else if (event.type === "MOVE") {
         console.log("Cube move", event.move, "face", event.face, "direction", event.direction);
-        if (lastMoveText)
+        if (lastMoveText) {
+          console.log("MOVE_DONE");
           lastMoveText.textContent = event.move;
+        }
       } else if (event.type === "GYRO") {
         console.log("Cube orientation quaternion", event.quaternion);
       } else if (event.type === "BATTERY") {
