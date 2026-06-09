@@ -19,7 +19,7 @@ public class KeyClick extends Action{
     }
 
     public static int getKeyEventFromString(String key) {
-        switch (key) {
+        switch (key.toLowerCase()) {
         case "a": return KeyEvent.VK_A; 
         case "b": return KeyEvent.VK_B; 
         case "c": return KeyEvent.VK_C; 

@@ -19,7 +19,7 @@ public class MouseClick extends Action{
     }
 
     public static int getMouseEventFromString(String key) {
-        switch (key) {
+        switch (key.toUpperCase()) {
             case "LEFT_MOUSE_DOWN": return InputEvent.BUTTON1_DOWN_MASK;
             case "RIGHT_MOUSE_DOWN": return InputEvent.BUTTON2_DOWN_MASK;
             case "MIDDLE_MOUSE_DOWN": return InputEvent.BUTTON3_DOWN_MASK;

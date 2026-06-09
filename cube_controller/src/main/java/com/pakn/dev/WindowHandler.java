@@ -55,7 +55,6 @@ public class WindowHandler extends Thread {
                         String mouse = moveElement.getAttribute("mouse");
                         if (key!=null) {
                             actionHandler.addAction(new KeyClick(key, Long.valueOf(moveElement.getAttribute("time"))));
-                            System.out.println("added actionb | "+Long.valueOf(moveElement.getAttribute("time")));
                         }else if (mouse!=null) {
                             actionHandler.addAction(new KeyClick(mouse, Long.valueOf(moveElement.getAttribute("time"))));
                         }

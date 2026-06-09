@@ -22,12 +22,21 @@ public final class ActionHandler extends Thread {
     }
 
     public void addAction(Action action) {
-        actionList.remove(action);
-        actionList.add(action);
-        if (action instanceof KeyClick keyAction) {
-            robot.keyPress(keyAction.getKey());
-        }else if (action instanceof MouseClick mouseAction) {
-            robot.mousePress(mouseAction.getMouseEvent());
+        if (actionList.contains(action)) {
+            Action actionInList = actionList.get(actionList.indexOf(action));
+            actionInList.setEndTime(actionInList.getEndTime()+action.getTimeMs());
+        }else {
+            actionList.remove(action);
+            actionList.add(action);
+            try {
+                if (action instanceof KeyClick keyAction && keyAction.getKey()!=-1) {
+                    robot.keyPress(keyAction.getKey());
+                }else if (action instanceof MouseClick mouseAction && mouseAction.getMouseEvent()!=-1) {
+                    robot.mousePress(mouseAction.getMouseEvent());
+                }
+            }catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -39,7 +48,6 @@ public final class ActionHandler extends Thread {
                 //System.out.println(actionList.size());
                 for (int i=0;i<actionList.size();i++) {
                     Action action = actionList.get(i);
-                    System.out.println(action.getEndTime());
                     if (System.currentTimeMillis() >= action.getEndTime()) {
                         if (action instanceof KeyClick keyAction) {
                             robot.keyRelease(keyAction.getKey());
@@ -56,6 +64,8 @@ public final class ActionHandler extends Thread {
             }
         }catch (InterruptedException e) {
             System.exit(0);
+        }catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 

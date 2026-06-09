@@ -24,10 +24,10 @@ document.addEventListener("keydown", (event)=> {
     if (clickedBox) {
         if (event.key==" ") {
             clickedBox.textContent = "Space";
-            clickedBox.setAttribute("key", "SPACE");
+            clickedBox.setAttribute("key", "space");
         }else {
             clickedBox.textContent = event.key;
-            clickedBox.setAttribute("key", event.key.toLowerCase());
+            clickedBox.setAttribute("key", event.key);
         }
         
         clickedBox.classList.remove("selected-box");

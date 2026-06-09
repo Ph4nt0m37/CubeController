@@ -1,10 +1,20 @@
 package com.pakn.dev;
 
 public class Action {
+    private long timeMs;
     private long endTime;
 
     Action(long timeMs) {
+        this.timeMs = timeMs;
         endTime = System.currentTimeMillis()+timeMs;
+    }
+
+    public long getTimeMs() {
+        return timeMs;
+    }
+
+    public void setTimeMs(long timeMs) {
+        this.timeMs = timeMs;
     }
 
     public long getEndTime() {
