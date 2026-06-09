@@ -33,7 +33,6 @@ public final class ActionHandler extends Thread {
     public void run() {
         isRunning = true;
         while (isRunning) {
-            System.out.println("running");
             for (Action action:actionList) {
                 if (action.getEndTime() >= System.currentTimeMillis()) {
                     if (action instanceof KeyClick keyAction) {
