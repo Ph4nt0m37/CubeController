@@ -82,3 +82,8 @@ button:active {
     font-size: 6rem;
     margin: 20px;
 }
+
+#connection-text {
+    font-size: 1.5rem;
+    color: var(--blue-button);
+}

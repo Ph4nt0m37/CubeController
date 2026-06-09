@@ -6730,11 +6730,23 @@
 
   // cube_controller/src/main/resources/static/scripts/bluetooth.ts
   var connectButton = document.getElementById("connect-button");
+  var connectionText = document.getElementById("connection-text");
   var lastMoveText = document.getElementById("last-move");
   connectButton?.addEventListener("click", async () => {
-    console.log("clicked");
+    if (connectionText) {
+      connectionText.style.color = "#3498db";
+      connectionText.textContent = "Attempting connection...";
+    }
     const conn = await connectSmartCube();
-    console.log("connected");
+    if (connectionText) {
+      if (conn) {
+        connectionText.textContent = "Connected";
+        connectionText.style.color = "#22eb51";
+      } else {
+        connectionText.textContent = "Connection failed.";
+        connectionText.style.color = "#e23333";
+      }
+    }
     conn.events$.subscribe((event) => {
       if (event.type === "FACELETS") {
       } else if (event.type === "MOVE") {

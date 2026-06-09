@@ -9,13 +9,28 @@ import type {
 
 //page stuff
 const connectButton = document.getElementById("connect-button");
+const connectionText = document.getElementById("connection-text");
 const lastMoveText = document.getElementById("last-move");
 
 // Connect to any supported smart cube
 connectButton?.addEventListener("click", async ()=>{
-    console.log("clicked");
+    if (connectionText) {
+        connectionText.style.color = "#3498db";
+        connectionText.textContent = "Attempting connection...";
+    }
+    
     const conn: SmartCubeConnection = await connectSmartCube();
-    console.log("connected");
+    
+    if (connectionText) {
+        if (conn) {
+            connectionText.textContent = "Connected";
+            connectionText.style.color = "#22eb51";
+        }else {
+            connectionText.textContent = "Connection failed.";
+            connectionText.style.color = "#e23333";
+        }
+    }
+    
 
     conn.events$.subscribe((event: SmartCubeEvent) => {
         if (event.type === "FACELETS") { //facelets is the current state of the cube. ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB (solved)
