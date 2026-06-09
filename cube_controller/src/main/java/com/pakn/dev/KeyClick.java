@@ -96,4 +96,9 @@ public class KeyClick extends Action{
             return -1;
         }
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return this==other || key==((KeyClick)other).key;
+    }
 }

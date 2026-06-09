@@ -3,11 +3,12 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 //implemented as a singleton since we only ever want one ActionHandler handling key/mouse clicks
 public final class ActionHandler extends Thread {
     private static ActionHandler instance = null;
-    private static ArrayList<Action> actionList = new ArrayList<>();
+    private static HashSet<Action> actionList = new HashSet<>();
     private static boolean isRunning = false;
     private static Robot robot;
 
@@ -21,6 +22,7 @@ public final class ActionHandler extends Thread {
     }
 
     public void addAction(Action action) {
+        actionList.remove(action);
         actionList.add(action);
         if (action instanceof KeyClick keyAction) {
             robot.keyPress(keyAction.getKey());

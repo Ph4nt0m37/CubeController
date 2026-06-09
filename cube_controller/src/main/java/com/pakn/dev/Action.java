@@ -1,6 +1,6 @@
 package com.pakn.dev;
 
-public class Action {
+public class Action implements {
     private long endTime;
 
     Action(long timeMs) {
@@ -15,6 +15,9 @@ public class Action {
         this.endTime = endTime;
     }
 
-    
+    @Override
+    public boolean equals(Object other) {
+        return this==other;
+    }
     
 }

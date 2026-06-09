@@ -28,4 +28,9 @@ public class MouseClick extends Action{
                 return -1;
         }
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return this==other || mouseEvent==((MouseClick)other).mouseEvent;
+    }
 }
