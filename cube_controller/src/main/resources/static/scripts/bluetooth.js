@@ -6737,25 +6737,15 @@
     console.log("connected");
     conn.events$.subscribe((event) => {
       if (event.type === "FACELETS") {
-        console.log("Cube facelets state", event.facelets);
       } else if (event.type === "MOVE") {
-        console.log("Cube move", event.move, "face", event.face, "direction", event.direction);
         if (lastMoveText) {
           console.log("MOVE_DONE");
           lastMoveText.textContent = event.move;
         }
       } else if (event.type === "GYRO") {
-        console.log("Cube orientation quaternion", event.quaternion);
       } else if (event.type === "BATTERY") {
-        console.log("Battery level", event.batteryLevel);
       }
     });
-    if (conn.capabilities.facelets) {
-      await conn.sendCommand({ type: "REQUEST_FACELETS" });
-    }
-    if (conn.capabilities.battery) {
-      await conn.sendCommand({ type: "REQUEST_BATTERY" });
-    }
   });
 })();
 /*! Bundled license information:

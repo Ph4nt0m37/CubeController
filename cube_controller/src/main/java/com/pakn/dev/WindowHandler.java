@@ -1,6 +1,7 @@
 package com.pakn.dev;
 
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchWindowException;
@@ -11,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 public class WindowHandler extends Thread {
@@ -22,6 +24,10 @@ public class WindowHandler extends Thread {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--enable-experimental-web-platform-features");
         options.addArguments("--enable-web-bluetooth-new-permissions-backend");
+
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.BROWSER, Level.ALL);
+        options.setCapability(ChromeOptions.LOGGING_PREFS, logPrefs);
 
         driver = new ChromeDriver(options);
 
@@ -36,28 +42,23 @@ public class WindowHandler extends Thread {
             return;
         }
         driver.get("http://127.0.0.1:8040");
-        int lastMovesDone = 0;
 		while (true) {
 			try {
 				driver.getTitle(); //detect window closed
                 LogEntries logs = driver.manage().logs().get(LogType.BROWSER);
-                //getting number of MOVE_DONE messages in console
-                int movesDone = 0;
                 for (LogEntry entry:logs) {
-                    if (entry.getMessage().equals("MOVE_DONE")) movesDone++;
-                }
-                //if the number of MOVE_DONE messages is greater than the last amount stored, that means a new move was done
-                if (movesDone > lastMovesDone) {
-                    lastMovesDone = movesDone;
-                    String lastMove = driver.findElement(By.id("last-move")).getText();
-                    WebElement moveElement = driver.findElement(By.className(lastMove));
+                    if (entry.getMessage().contains("MOVE_DONE")) { //if MOVE_DONE log was printed, run thing
+                        String lastMove = driver.findElement(By.id("last-move")).getText();
+                        WebElement moveElement = driver.findElement(By.className(lastMove));
 
-                    String key = moveElement.getAttribute("key");
-                    String mouse = moveElement.getAttribute("mouse");
-                    if (key!=null) {
-                        actionHandler.addAction(new KeyClick(key, Long.valueOf(moveElement.getAttribute("time"))));
-                    }else if (mouse!=null) {
-                        actionHandler.addAction(new KeyClick(mouse, Long.valueOf(moveElement.getAttribute("time"))));
+                        String key = moveElement.getAttribute("key");
+                        String mouse = moveElement.getAttribute("mouse");
+                        if (key!=null) {
+                            actionHandler.addAction(new KeyClick(key, Long.valueOf(moveElement.getAttribute("time"))));
+                            System.out.println("added actionb");
+                        }else if (mouse!=null) {
+                            actionHandler.addAction(new KeyClick(mouse, Long.valueOf(moveElement.getAttribute("time"))));
+                        }
                     }
                 }
 			}catch (UnreachableBrowserException | NoSuchWindowException e) {

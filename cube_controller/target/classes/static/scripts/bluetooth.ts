@@ -18,26 +18,26 @@ connectButton?.addEventListener("click", async ()=>{
     console.log("connected");
 
     conn.events$.subscribe((event: SmartCubeEvent) => {
-        if (event.type === "FACELETS") {
-            console.log("Cube facelets state", event.facelets);
+        if (event.type === "FACELETS") { //facelets is the current state of the cube. ex: UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB (solved)
+            //console.log("Cube facelets state", event.facelets);
         } else if (event.type === "MOVE") {
-            console.log("Cube move", event.move, "face", event.face, "direction", event.direction);
+            //console.log("Cube move", event.move, "face", event.face, "direction", event.direction);
             if (lastMoveText) {
                 console.log("MOVE_DONE");
                 lastMoveText.textContent = event.move;
             }
         } else if (event.type === "GYRO") {
-            console.log("Cube orientation quaternion", event.quaternion);
+            //console.log("Cube orientation quaternion", event.quaternion);
         } else if (event.type === "BATTERY") {
-            console.log("Battery level", event.batteryLevel);
+            //console.log("Battery level", event.batteryLevel);
         }
     });
 
-    // Request current facelets / battery if supported
-    if (conn.capabilities.facelets) {
-        await conn.sendCommand({ type: "REQUEST_FACELETS" });
-    }
-    if (conn.capabilities.battery) {
-        await conn.sendCommand({ type: "REQUEST_BATTERY" });
-    }
+    // // Request current facelets / battery if supported
+    // if (conn.capabilities.facelets) {
+    //     await conn.sendCommand({ type: "REQUEST_FACELETS" });
+    // }
+    // if (conn.capabilities.battery) {
+    //     await conn.sendCommand({ type: "REQUEST_BATTERY" });
+    // }
 });
