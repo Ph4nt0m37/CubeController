@@ -1,6 +1,6 @@
 package com.pakn.dev;
 
-public class Action implements {
+public class Action {
     private long endTime;
 
     Action(long timeMs) {
