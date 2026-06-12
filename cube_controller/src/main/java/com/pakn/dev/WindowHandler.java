@@ -1,5 +1,6 @@
 package com.pakn.dev;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 
@@ -48,7 +49,7 @@ public class WindowHandler extends Thread {
                 LogEntries logs = driver.manage().logs().get(LogType.BROWSER);
                 for (LogEntry entry:logs) {
                     if (entry.getMessage().contains("MOVE_DONE")) { //if MOVE_DONE log was printed, run thing
-                        String lastMove = driver.findElement(By.id("last-move")).getText();
+                        String lastMove = entry.getMessage().replace("\"","").split("\\|")[1];
                         WebElement moveElement = driver.findElement(By.className(lastMove));
 
                         String key = moveElement.getAttribute("key");
@@ -58,7 +59,7 @@ public class WindowHandler extends Thread {
                         }else if (mouse!=null) {
                             actionHandler.addAction(new KeyClick(mouse, Long.valueOf(moveElement.getAttribute("time"))));
                         }
-                        break;
+                        //break;
                     }
                 }
 			}catch (UnreachableBrowserException | NoSuchWindowException e) {

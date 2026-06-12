@@ -38,7 +38,7 @@ connectButton?.addEventListener("click", async ()=>{
         } else if (event.type === "MOVE") {
             //console.log("Cube move", event.move, "face", event.face, "direction", event.direction);
             if (lastMoveText) {
-                console.log("MOVE_DONE");
+                console.log(`MOVE_DONE|${event.move}`);
                 lastMoveText.textContent = event.move;
             }
         } else if (event.type === "GYRO") {

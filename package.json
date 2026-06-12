@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "smartcube-web-bluetooth": "github:poliva/smartcube-web-bluetooth"
+    "smartcube-web-bluetooth": "github:poliva/smartcube-web-bluetooth",
+    "typescript": "^6.0.3"
   },
   "type": "module",
   "scripts": {

@@ -6751,7 +6751,7 @@
       if (event.type === "FACELETS") {
       } else if (event.type === "MOVE") {
         if (lastMoveText) {
-          console.log("MOVE_DONE");
+          console.log(`MOVE_DONE|${event.move}`);
           lastMoveText.textContent = event.move;
         }
       } else if (event.type === "GYRO") {
