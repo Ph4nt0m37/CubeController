@@ -62,3 +62,59 @@ document.addEventListener("contextmenu", (event)=> { //detect right click
         clickedBox = null;
     }
 });
+
+
+
+
+
+class Preset {
+    private id: number;
+    private name: string;
+
+    constructor(id: number, name: string) {
+        this.id = id;
+        this.name = name;
+    }
+
+    getId() {
+        return this.id;
+    }
+
+    getName() {
+        return this.name;
+    }
+}
+
+let presetDropdown: HTMLSelectElement = document.getElementById("preset-dropdown") as HTMLSelectElement;
+let saveProfileButton = document.getElementById("save-profile-button");
+
+let currentPreset: Preset | null = null;
+currentPreset = new Preset(5,"lol");
+
+saveProfileButton?.addEventListener("click",()=>{
+    let promptName: string = prompt("What is the name of this preset?", presetDropdown.options[presetDropdown.selectedIndex]?.textContent) as string;
+    const promptId = currentPreset!=null ? currentPreset.getId() : Math.random()*9999999;
+    currentPreset = new Preset(promptId, promptName);
+    fetch("/save-preset",{
+        method: "POST",
+        body: JSON.stringify({
+            id: promptId,
+            name: promptName
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(resp=>{
+        if (resp.ok) return
+    });
+});
+
+presetDropdown?.addEventListener("change",()=>{
+    if (presetDropdown.value == "default") {
+        currentPreset = null;
+        return;
+    }
+
+    const selectedPreset = presetDropdown.options[presetDropdown.selectedIndex];
+    currentPreset = new Preset(selectedPreset?.getAttribute("presetId"),selectedPreset?.textContent);
+});

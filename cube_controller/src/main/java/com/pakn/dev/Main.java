@@ -14,7 +14,7 @@ public class Main {
         ActionHandler actionHandler = ActionHandler.getInstance();
         actionHandler.start();
 
-        WindowHandler windowHandler = new WindowHandler();
+        WindowHandler windowHandler = WindowHandler.getInstance();
         windowHandler.openControllerWindow();
     }
 }

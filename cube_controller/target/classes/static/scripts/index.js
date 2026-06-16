@@ -56,5 +56,23 @@ document.addEventListener("contextmenu", (event) => {
         clickedBox = null;
     }
 });
+let presetDropdown = document.getElementById("preset-dropdown");
+let saveProfileButton = document.getElementById("save-profile-button");
+saveProfileButton?.addEventListener("click", () => {
+    let promptName = prompt("What is the name of this preset?", presetDropdown.value);
+    fetch("/save-preset", {
+        method: "POST",
+        body: JSON.stringify({
+            id: Math.random() * 9999999,
+            name: promptName
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    }).then(resp => {
+        if (resp.ok)
+            return;
+    });
+});
 export {};
 //# sourceMappingURL=index.js.map
