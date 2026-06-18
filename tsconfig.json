@@ -44,6 +44,7 @@
   "exclude": [
     "node_modules",
     "./cube_controller/target",
-    "./CubeControllerRelease"
+    "./CubeControllerRelease",
+    "./CubeController",
   ]
 }

@@ -170,7 +170,7 @@ presetDropdown?.addEventListener("change", () => {
     }
     const selectedPreset = presetDropdown.options[presetDropdown.selectedIndex];
     currentPreset = new Preset(Number(selectedPreset?.getAttribute("presetId")), String(selectedPreset?.textContent));
-    fetch("/presets.json").then((promise) => {
+    fetch("/get-presets").then((promise) => {
         if (promise.ok)
             return promise.json();
         console.error("Something went wrong loading this preset.");

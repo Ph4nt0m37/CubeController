@@ -1,0 +1,204 @@
+main, body {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    background-color: var(--main-bg-color);
+
+}
+
+.main {
+    min-width: 480px;
+    max-width: 960px;
+    background-color: var(--popup-color);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgb(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    flex-direction: column;
+    position: relative;
+}
+
+button {
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    padding: 10px;
+    cursor: pointer;
+}
+
+button:active {
+    scale: 0.97;
+}
+
+#connect-button {
+    font-size: 1.5rem;
+    background-color: var(--green-button);
+}
+
+#connect-button:hover {
+    background-color: var(--green-button-hover);
+}
+
+.keybinds-list-div {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 10px;
+    gap: 20px;
+}
+
+.keybind-div {
+    display: flex;
+    flex-direction: column;
+}
+
+.key-div > p {
+    font-size: 1.5rem;
+    margin: 5px;
+}
+
+.key-div {
+    display: flex;
+}
+
+.key {
+    display: flex;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    border: 1px solid var(--highest-defecit-color);
+    border-radius: 5px;
+    background-color: var(--high-defecit-color);
+}
+
+.time-input {
+    max-width: 70px;
+    border: 1px solid var(--highest-defecit-color);
+    border-radius: 5px;
+}
+
+.selected-box {
+    background-color: var(--highest-defecit-color);
+}
+
+#last-move {
+    font-size: 6rem;
+    margin: 20px;
+}
+
+#connection-text {
+    font-size: 1.5rem;
+    color: var(--blue-button);
+}
+
+.dropdown {
+    font-weight: 500;
+    border: #555 2px solid;
+    padding: 3px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 5px;
+    color: black;
+    transition: background-color 0.3s ease;
+    margin: 10px 0px;
+    font-size: 0.85rem;
+}
+
+.dropdown, ::picker(select) {
+    appearance: base-select;
+}
+
+.dropdown:hover {
+    background-color: var(--high-defecit-color);
+}
+
+.dropdown::picker-icon {
+    position: relative;
+    top: 3px;
+    content: url("../images/chevron-down-gray.svg");
+    transform-origin: center 12px;
+    transition: 0.15s rotate;
+    transform: scale(0.85);
+}
+
+.dropdown:open::picker-icon {
+  rotate: 180deg;
+}
+
+.dropdown > option {
+    border: 2px solid #555;
+    background-color: var(--defecit-color);
+    font-weight: 100;
+    outline: none;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown > option:first-of-type {
+  border-radius: 4px 4px 0 0;
+}
+
+.dropdown > option:last-of-type {
+  border-radius: 0 0 4px 4px;
+}
+
+::picker(select) {
+  border-radius: 4px;
+  border: none;
+}
+
+.dropdown > option:not(option:last-of-type) {
+  border-bottom: none;
+}
+
+.dropdown > option:checked {
+    font-weight: bold;
+}
+
+.dropdown > option:hover {
+    background-color: var(--high-defecit-color);
+}
+
+.dropdown > option::checkmark {
+    order: 1;
+    margin-left: auto;
+    content: url("../images/check_gray.svg");
+    scale: 0.85;
+    position: relative;
+    top: 2px;
+}
+
+#preset-dropdown {
+    position: absolute;
+    left: 30px;
+}
+
+#save-profile-button {
+    position: absolute;
+    right: 30px;
+    top: 15px;
+    font-size: 0.8em;
+    background-color: var(--blue-button);
+    padding: 5px;
+    border-radius: 6px;
+}
+
+#save-profile-button:hover {
+    background-color: var(--blue-button-hover);
+}
+
+#delete-profile-button {
+    position: absolute;
+    right: 30px;
+    top: 45px;
+    font-size: 0.8em;
+    background-color: var(--red-button);
+    padding: 5px;
+    border-radius: 6px;
+}
+
+#delete-profile-button:hover {
+    background-color: var(--red-button-hover);
+}
