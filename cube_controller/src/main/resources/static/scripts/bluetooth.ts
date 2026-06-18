@@ -26,7 +26,7 @@ connectButton?.addEventListener("click", async ()=>{
             connectionText.textContent = "Connected";
             connectionText.style.color = "#22eb51";
         }else {
-            connectionText.textContent = "Connection failed.";
+            connectionText.textContent = "Connection failed";
             connectionText.style.color = "#e23333";
         }
     }

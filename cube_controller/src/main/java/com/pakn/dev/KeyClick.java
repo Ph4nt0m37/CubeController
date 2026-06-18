@@ -6,7 +6,7 @@ public class KeyClick extends Action{
     private int key;
     
     KeyClick(String key, long timeMs) {
-        super(timeMs);
+        super(timeMs, key);
         this.key = getKeyEventFromString(key);
     }
 
@@ -97,6 +97,7 @@ public class KeyClick extends Action{
         case "shft": return KeyEvent.VK_SHIFT;
         case "shift": return KeyEvent.VK_SHIFT;
         case "space": return KeyEvent.VK_SPACE;
+        case "escape": return KeyEvent.VK_ESCAPE;
         default:
             return -1;
         }

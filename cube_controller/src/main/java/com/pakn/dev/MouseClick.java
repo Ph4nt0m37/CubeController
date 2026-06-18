@@ -6,7 +6,7 @@ public class MouseClick extends Action{
     private int mouseEvent;
 
     MouseClick(String mouseEvent, long timeMs) {
-        super(timeMs);
+        super(timeMs, mouseEvent);
         this.mouseEvent = getMouseEventFromString(mouseEvent);
     }
 

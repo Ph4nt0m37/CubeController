@@ -2,16 +2,19 @@ package com.pakn.dev;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,7 +25,7 @@ import jakarta.annotation.PostConstruct;
 public class PresetHandler {
     HashMap<Integer, Preset> presetList = new HashMap<>();
     ObjectMapper presetMapper = new ObjectMapper();
-    File presetFile = new File("cube_controller\\src\\main\\resources\\static\\presets.json".replace("\\", File.separator));
+    File presetFile = new File("src\\main\\resources\\static\\presets.json".replace("\\", File.separator));
 
     //on start, read presets from presetFile
     @PostConstruct
@@ -30,11 +33,10 @@ public class PresetHandler {
         try {
             presetFile.createNewFile();
             JsonNode presetsNode = presetMapper.readTree(presetFile);
-            if (presetsNode.isArray()) {
-                for (JsonNode presetNode:presetsNode) {
-                    Preset preset = presetMapper.readValue(presetNode.toString(), Preset.class);
-                    presetList.put(preset.getId(), preset);
-                }
+            for (JsonNode presetNode:presetsNode) {
+                Preset preset = presetMapper.readValue(presetNode.toString(), Preset.class);
+                preset.setMoveMap(readActionMap(presetNode)); //has to use readActionMap since the hashmap doesn't serialize nicely due to polymorphism
+                presetList.put(preset.getId(), preset);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,7 +45,6 @@ public class PresetHandler {
 
     @PostMapping("/save-preset")
     public ResponseEntity<?> savePreset(@RequestBody Preset preset) {
-        presetList.put(preset.getId(), preset);
         try {
             preset.setMoveMap(WindowHandler.getInstance().getActionMap());
             presetList.put(preset.getId(), preset);
@@ -55,18 +56,42 @@ public class PresetHandler {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/save-preset")
+    public ResponseEntity<?> deletePreset(@RequestBody Preset preset) {
+        try {
+            presetList.remove(preset.getId());
+            presetMapper.writeValue(presetFile, presetList);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private HashMap<String, Action> readActionMap(JsonNode presetNode) {
+        HashMap<String, Action> actionMap = new HashMap<>();
+
+        JsonNode moveMapNode = presetNode.get("moveMap");
+        Iterator<String> moveMapNodeIterator = moveMapNode.fieldNames();
+        while (moveMapNodeIterator.hasNext()) {
+            String moveKey = moveMapNodeIterator.next();
+            JsonNode moveNode = moveMapNode.get(moveKey);
+            if (moveNode.get("key")!=null) {
+                actionMap.put(moveKey, new KeyClick(moveNode.get("actionString").asText(), moveNode.get("timeMs").asLong()));
+            }else if (moveNode.get("mouse")!=null) {
+                actionMap.put(moveKey, new MouseClick(moveNode.get("actionString").asText(), moveNode.get("timeMs").asLong()));
+            }
+        }
+        return actionMap;
+    }
     
     private static class Preset {
         private int id;
         private String name;
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         private HashMap<String, Action> moveMap = new HashMap<>();
-
-        public Preset() {}
-
-        public Preset(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
 
         public int getId() {
             return id;
@@ -90,6 +115,11 @@ public class PresetHandler {
 
         public void setMoveMap(HashMap<String, Action> moveMap) {
             this.moveMap = moveMap;
+        }
+
+        @Override
+        public String toString() {
+            return "Preset [id=" + id + ", name=" + name + ", moveMap=" + Arrays.asList(moveMap) + "]";
         }
     }
 }

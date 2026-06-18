@@ -32,6 +32,7 @@ public class WindowHandler extends Thread {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--enable-experimental-web-platform-features");
         options.addArguments("--enable-web-bluetooth-new-permissions-backend");
+        options.addArguments("--disable-popup-blocking");
         options.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
 
         LoggingPreferences logPrefs = new LoggingPreferences();
@@ -77,7 +78,6 @@ public class WindowHandler extends Thread {
 		while (true) {
 			try {
 				driver.getTitle(); //detect window closed
-                driver.switchTo().alert(); //ignore alert
                 LogEntries logs = driver.manage().logs().get(LogType.BROWSER);
                 for (LogEntry entry:logs) {
                     if (entry.getMessage().contains("MOVE_DONE")) { //if MOVE_DONE log was printed, run thing
@@ -94,6 +94,7 @@ public class WindowHandler extends Thread {
                         //break;
                     }
                 }
+                driver.switchTo().alert(); //ignore alert
 			}catch (UnreachableBrowserException | NoSuchWindowException e) {
 				actionHandler.stopHandler();
 				System.exit(0);

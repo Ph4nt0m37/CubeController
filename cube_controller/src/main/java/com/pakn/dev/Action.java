@@ -1,12 +1,19 @@
 package com.pakn.dev;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Action {
     private long timeMs;
+    
+    @JsonIgnore
     private long endTime;
+    
+    private String actionString;
 
-    Action(long timeMs) {
+    Action(long timeMs, String actionString) {
         this.timeMs = timeMs;
         endTime = System.currentTimeMillis()+timeMs;
+        this.actionString = actionString;
     }
 
     public long getTimeMs() {
@@ -24,6 +31,14 @@ public class Action {
     public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
+    
+    public String getActionString() {
+        return actionString;
+    }
+
+    public void setActionString(String actionString) {
+        this.actionString = actionString;
+    }
 
     @Override
     public boolean equals(Object other) {
@@ -35,6 +50,5 @@ public class Action {
     @Override
     public String toString() {
         return "Action [endTime=" + endTime + "]";
-    }
-    
+    }    
 }

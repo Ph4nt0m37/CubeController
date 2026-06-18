@@ -1,13 +1,25 @@
 const keyBoxes = document.getElementsByClassName("key");
 const timeInputs = document.getElementsByClassName("time-input");
 let clickedBox = null;
+let shiftDown = false;
 for (const keyBox of keyBoxes) {
     keyBox.addEventListener("click", () => {
         setTimeout(() => {
-            clickedBox = keyBox;
-            clickedBox.removeAttribute("key");
-            clickedBox.removeAttribute("mouse");
-            clickedBox.classList.add("selected-box");
+            keyBox.removeAttribute("key");
+            keyBox.removeAttribute("mouse");
+            if (!shiftDown) {
+                clickedBox = keyBox;
+                keyBox.classList.add("selected-box");
+            }
+            else { //set keybind text to ? if shift is pressed (aka: clear keybind)
+                keyBox?.removeAttribute("time");
+                if (keyBox) {
+                    keyBox.textContent = "?";
+                    const timeInput = keyBox.parentElement?.parentElement?.querySelector(".time-input");
+                    if (timeInput)
+                        timeInput.value = "";
+                }
+            }
         }, 10); //wait 10 ms to let the document click event process
     });
 }
@@ -29,8 +41,15 @@ document.addEventListener("keydown", (event) => {
         clickedBox.classList.remove("selected-box");
         clickedBox = null;
     }
+    if (event.key == "Shift")
+        shiftDown = true;
 });
-document.addEventListener("click", (event) => {
+document.addEventListener("keyup", (event) => {
+    if (event.key == "Shift")
+        shiftDown = false;
+});
+let preventContextMenu = false;
+document.addEventListener("mousedown", (event) => {
     if (clickedBox) {
         if (event.button === 0) {
             clickedBox.textContent = "Left Click";
@@ -46,24 +65,48 @@ document.addEventListener("click", (event) => {
         }
         clickedBox.classList.remove("selected-box");
         clickedBox = null;
+        preventContextMenu = true;
+    }
+});
+document.addEventListener("mouseup", (event) => {
+    if (event.button === 2) {
+        setTimeout(() => {
+            preventContextMenu = false;
+        }, 10); //wait 10 ms for contextmenu event listener to process
     }
 });
 document.addEventListener("contextmenu", (event) => {
-    if (clickedBox) {
-        clickedBox.textContent = "Right Click";
-        clickedBox.setAttribute("mouse", "RIGHT_MOUSE_DOWN");
-        clickedBox.classList.remove("selected-box");
-        clickedBox = null;
+    if (preventContextMenu) {
+        event.preventDefault();
     }
 });
+class Preset {
+    id;
+    name;
+    constructor(id, name) {
+        this.id = id;
+        this.name = name;
+    }
+    getId() {
+        return this.id;
+    }
+    getName() {
+        return this.name;
+    }
+}
+const connectionText = document.getElementById("connection-text");
 let presetDropdown = document.getElementById("preset-dropdown");
 let saveProfileButton = document.getElementById("save-profile-button");
+let deleteProfileButton = document.getElementById("delete-profile-button");
+let currentPreset = null;
 saveProfileButton?.addEventListener("click", () => {
-    let promptName = prompt("What is the name of this preset?", presetDropdown.value);
+    const selectedPreset = presetDropdown.options[presetDropdown.selectedIndex];
+    let promptName = prompt("What is the name of this preset?", selectedPreset?.textContent);
+    const presetId = currentPreset != null ? currentPreset.getId() : Math.floor(Math.random() * 9999999);
     fetch("/save-preset", {
         method: "POST",
         body: JSON.stringify({
-            id: Math.random() * 9999999,
+            id: presetId,
             name: promptName
         }),
         headers: {
@@ -72,7 +115,144 @@ saveProfileButton?.addEventListener("click", () => {
     }).then(resp => {
         if (resp.ok)
             return;
+        console.error("Something went wrong saving this preset.");
+        if (connectionText) {
+            connectionText.textContent = "Failed To Save Preset";
+            connectionText.style.color = "#e23333";
+        }
+    }).then(() => {
+        if (currentPreset == null) {
+            addPresetToList(new Preset(presetId, promptName), true);
+        }
+        else {
+            //renaming capability
+            const presetOption = document.querySelector(`[presetid="${presetId}"]`);
+            if (presetOption)
+                presetOption.textContent = promptName;
+        }
+        currentPreset = new Preset(presetId, promptName);
+        selectedPreset?.setAttribute("presetId", String(presetId));
+        if (connectionText) {
+            connectionText.textContent = "Preset Saved Successfully";
+            connectionText.style.color = "#22eb51";
+        }
     });
 });
+deleteProfileButton?.addEventListener("click", () => {
+    if (currentPreset != null && confirm("Are you sure you want to delete this preset?")) {
+        fetch("/save-preset", {
+            method: "DELETE",
+            body: JSON.stringify({
+                id: currentPreset.getId(),
+                name: currentPreset.getName()
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        }).then(resp => {
+            if (resp.ok)
+                return;
+            console.error("Something went wrong deleting this preset.");
+            if (connectionText) {
+                connectionText.textContent = "Failed To Delete Preset";
+                connectionText.style.color = "#e23333";
+            }
+        }).then(() => {
+            deletePresetFromList(new Preset(Number(currentPreset?.getId()), String(currentPreset?.getName())));
+        });
+    }
+});
+presetDropdown?.addEventListener("change", () => {
+    if (presetDropdown.value == "default") {
+        currentPreset = null;
+        loadKeyMapping({});
+        return;
+    }
+    const selectedPreset = presetDropdown.options[presetDropdown.selectedIndex];
+    currentPreset = new Preset(Number(selectedPreset?.getAttribute("presetId")), String(selectedPreset?.textContent));
+    fetch("/presets.json").then((promise) => {
+        if (promise.ok)
+            return promise.json();
+        console.error("Something went wrong loading this preset.");
+    }).then((data) => {
+        loadKeyMapping(data[String(currentPreset?.getId())]["moveMap"]);
+    });
+});
+function addPresetToList(currentPreset, select) {
+    const presetTemplate = document.getElementById("preset-option-template");
+    const newPresetNode = presetTemplate?.cloneNode(true);
+    newPresetNode.textContent = currentPreset.getName();
+    newPresetNode?.setAttribute("presetid", String(currentPreset.getId()));
+    newPresetNode.value = currentPreset.getName();
+    presetDropdown.appendChild(newPresetNode);
+    if (select) {
+        const currSelectedOption = presetDropdown.options[presetDropdown.selectedIndex];
+        if (currSelectedOption)
+            currSelectedOption.selected = false;
+        newPresetNode.selected = true;
+    }
+}
+function deletePresetFromList(currentPreset) {
+    const presetTemplate = document.getElementById("preset-option-template");
+    presetDropdown?.options[presetDropdown.selectedIndex]?.remove();
+    presetTemplate.selected = true;
+    loadKeyMapping({});
+}
+function loadKeyMapping(keyMapping) {
+    const moveList = ["U", "U'", "D", "D'", "F", "F'", "B", "B'", "R", "R'", "L", "L'"];
+    for (const move of moveList) {
+        const keyBox = document.querySelector(`.${CSS.escape(move)}`);
+        keyBox?.removeAttribute("key");
+        keyBox?.removeAttribute("mouse");
+        const moveData = keyMapping[move];
+        if (moveData) {
+            if (moveData["key"])
+                keyBox?.setAttribute("key", moveData["actionString"]);
+            if (moveData["mouseEvent"])
+                keyBox?.setAttribute("mouse", moveData["actionString"]);
+            keyBox?.setAttribute("time", moveData["timeMs"]);
+            if (keyBox) {
+                keyBox.textContent = beautifyActionString(moveData["actionString"]);
+                const timeInput = keyBox.parentElement?.parentElement?.querySelector(".time-input");
+                if (timeInput)
+                    timeInput.value = moveData["timeMs"];
+            }
+        }
+        else {
+            keyBox?.removeAttribute("key");
+            keyBox?.removeAttribute("mouse");
+            if (keyBox) {
+                keyBox.textContent = "?";
+                const timeInput = keyBox.parentElement?.parentElement?.querySelector(".time-input");
+                if (timeInput)
+                    timeInput.value = "";
+            }
+        }
+    }
+}
+function beautifyActionString(actionString) {
+    switch (actionString) {
+        case "space": return "Space";
+        case "LEFT_MOUSE_DOWN": return "Left Click";
+        case "MIDDLE_MOUSE_DOWN": return "Middle Click";
+        case "RIGHT_MOUSE_DOWN": return "Right Click";
+        default: return actionString;
+    }
+}
+function loadAllPresets() {
+    fetch("/presets.json").then((promise) => {
+        if (promise.ok)
+            return promise.json();
+        console.error("Something went wrong loading presets.");
+    }).then((data) => {
+        const presetTemplate = document.getElementById("preset-option-template");
+        for (const presetIdStr of Object.keys(data)) {
+            addPresetToList(new Preset(Number(presetIdStr), data[presetIdStr]["name"]), false);
+        }
+        //keep template selected
+        presetTemplate.selected = true;
+    });
+}
+loadAllPresets();
 export {};
 //# sourceMappingURL=index.js.map
