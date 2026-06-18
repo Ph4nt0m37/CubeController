@@ -2,6 +2,7 @@ package com.pakn.dev;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -25,7 +27,7 @@ import jakarta.annotation.PostConstruct;
 public class PresetHandler {
     HashMap<Integer, Preset> presetList = new HashMap<>();
     ObjectMapper presetMapper = new ObjectMapper();
-    File presetFile = new File("src\\main\\resources\\static\\presets.json".replace("\\", File.separator));
+    File presetFile = new File(System.getProperty("user.dir")+"\\presets.json".replace("\\", File.separator));
 
     //on start, read presets from presetFile
     @PostConstruct
@@ -68,6 +70,16 @@ public class PresetHandler {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/get-presets")
+    public ResponseEntity<String> getPresets() {
+        try {
+            return new ResponseEntity<>(Files.readString(presetFile.toPath()), HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private HashMap<String, Action> readActionMap(JsonNode presetNode) {

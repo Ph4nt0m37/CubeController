@@ -264,7 +264,7 @@ function beautifyActionString(actionString: string): string {
 }
 
 function loadAllPresets() {
-    fetch("/presets.json").then((promise)=>{
+    fetch("/get-presets").then((promise)=>{
         if (promise.ok) return promise.json();
         console.error("Something went wrong loading presets.");
     }).then((data)=>{
