@@ -22,7 +22,8 @@ To install CubeContoller, go to the [Releases](https://github.com/Ph4nt0m37/Cube
 1. Press the **Connect** button. A bluetooth connection popup should appear
     * If a popup does not appear, make sure Bluetooth is enabled in your browser
 2. Connect your cube. You should get a green **Connected** text under the button
- 
+
+ ## Example Preset
 <img width="787" height="527" alt="image" src="https://github.com/user-attachments/assets/4a24caa6-5914-4f07-8178-47362a3d06ef" />
 
 ## Supported Cubes
